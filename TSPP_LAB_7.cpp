@@ -17,6 +17,25 @@ struct pd {
 	int Agreement;
 };
 
+struct crcard {
+	string FIO;
+	string number;
+	string given;
+	double BalanceOfMoney;
+	int Id;
+	string dateEndCard;
+	int lowLineOfMoney;
+};
+
+struct dbcard {
+	string FIO;
+	string number;
+	string given;
+	double BalanceOfMoney;
+	int Id;
+	string dateEndCard;
+};
+
 class ClientOfTheBank {
 public:
 	void ShowInformation();
