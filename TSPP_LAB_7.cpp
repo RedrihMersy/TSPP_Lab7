@@ -18,22 +18,14 @@ struct pd {
 };
 
 struct crcard {
-	string FIO;
-	string number;
-	string given;
-	double BalanceOfMoney;
-	int Id;
-	string dateEndCard;
+	pd credcard;
+	string dayToEndCard;
 	int lowLineOfMoney;
 };
 
 struct dbcard {
-	string FIO;
-	string number;
-	string given;
-	double BalanceOfMoney;
-	int Id;
-	string dateEndCard;
+	pd debcard;
+	string dayToEndCard;
 };
 
 class ClientOfTheBank {
@@ -92,7 +84,7 @@ class Manager {
 public:
 	bool AddDataOfClint();
 	pd giveDataOfClint();
-	bool conclusionAgrement(<T> ObjecOfAgreement);
+	void makeAgrementDebCard();
 	bool setMessageToPayMasterForDelivery(ClientOfTheBank Client, <T> ObjecOfAgreement);
 	bool setMessageToPayMasterForReseptiomMoney(ClientOfTheBank Client, <T> ObjecOfAgreement);
 	Manager() {
@@ -100,6 +92,8 @@ public:
 		amountOfDebitCard =3;
 		amountOfPayCard = 3;
 		Client1 = new ClientOfTheBank();
+		Card1 = new AgreementOfCreditCard();
+		Card2 = new AgreementOfDebetCard();
 	}
 	Manager(int credit, int debit, int pay) {
 		amountOfCreditCard = pay;
@@ -109,6 +103,8 @@ public:
 	}
 private:
 	class ClientOfTheBank *Client1 = NULL;
+	class AgreementOfDebetCard *Card2 = NULL;
+	class AgreementOfCreditCard *Card1 = NULL;
 	int amountOfCreditCard;
 	int amountOfDebitCard;
 	int amountOfPayCard;
@@ -120,10 +116,115 @@ bool Manager::AddDataOfClint() {
 
 pd Manager::giveDataOfClint() {
 	pd outerInformation;
-	outerInformation = 
+	outerInformation = Client1->makeAgreement();
 	
-	Client1 = new ClientOfTheBank();
-	return true;
+	cout << " | Данные клиента переданы."<< endl;
+	return outerInformation;
+}
+
+void Manager::makeAgrementDebCard() {
+	int watCardNeed = 0;
+	cout << " | Выполняется заключение договора."<< endl;
+	cout << " | Выберете какой договор нужно формить:" << endl;
+	cout << " | Нажмите 1, если хотите оформить договор на получение кредитной карты." << endl;
+	cout << " | Нажмите 2, если хотите оформить договор на получение депозитной карты." << endl;
+	cin >> watCardNeed;
+	switch (watCardNeed) {
+		case 1: {
+					Card1->AddInf(1, Client1->GiveInformation, 200, -500);
+					Card1->ShowInf;
+				break;
+
+		}
+		case 2: {
+					Card2->AddInf(1, Client1->GiveInformation, 320);
+					Card2->ShowInf;
+					break;
+		}
+		default: {
+					 cout << " | Вы ошиблись с вводом."<< endl;
+		}
+	}
+}
+
+class AgreementOfDebetCard {
+public:
+	void ShowInf();
+	void AddInf(int id, pd Info, int date);
+	AgreementOfDebetCard() {
+		IdAgreementDC = 0;
+		form.debcard.FIO = "Berezovik Grogoriy Victorovich";
+		form.debcard.given = "RF, city Djankoi";
+		form.debcard.Id = 1;
+		form.debcard.number = "456 79852";
+		form.debcard.Agreement = 0;
+		form.debcard.BalanceOfMoney = 10;
+		form.dayToEndCard = 490;
+	}
+	AgreementOfDebetCard(int id, pd Info, int date) {
+		IdAgreementDC = id;
+		form.debcard = Info;
+		form.dayToEndCard = date;
+	}
+private:
+	dbcard form;
+	int IdAgreementDC;
+};
+void AgreementOfDebetCard::ShowInf(){
+	cout << " | Порядковый номер - " << form.debcard.Id << endl;
+	cout << " | Ф. И. О. клиентa - " << form.debcard.FIO << endl;
+	cout << " | Номер паспорта - " << form.debcard.number << endl;
+	cout << " | Место выдачи паспорта - " << form.debcard.given << endl;
+	cout << " | Баланс счёта - " << form.debcard.BalanceOfMoney << endl;
+	cout << " | Количество заключенных договоров - " << form.debcard.Agreement << endl;
+	cout << " | Продолжительность действия карты - " << form.dayToEndCard << endl;
+}
+void AgreementOfDebetCard::AddInf(int id, pd Info, int date) {
+	IdAgreementDC = id;
+	form.debcard = Info;
+	form.dayToEndCard = date;
+}
+
+class AgreementOfCreditCard {
+public:
+	void ShowInf();
+	void AddInf(int id, pd Info, int date, int low);
+	AgreementOfCreditCard() {
+		IdAgreementDC = 0;
+		form.credcard.FIO = "Berezovik Grogoriy Victorovich";
+		form.credcard.given = "RF, city Djankoi";
+		form.credcard.Id = 1;
+		form.credcard.number = "456 79852";
+		form.credcard.Agreement = 0;
+		form.credcard.BalanceOfMoney = 10;
+		form.dayToEndCard = 490;
+		form.lowLineOfMoney = -510;
+	}
+	AgreementOfCreditCard(int id, pd Info, int date, int low) {
+		IdAgreementDC = id;
+		form.credcard = Info;
+		form.dayToEndCard = date;
+		form.lowLineOfMoney = low;
+	}
+private:
+	crcard form;
+	int IdAgreementDC;
+};
+void AgreementOfCreditCard :: ShowInf(){
+	cout << " | Порядковый номер - " << form.credcard.Id << endl;
+	cout << " | Ф. И. О. клиентa - " << form.credcard.FIO << endl;
+	cout << " | Номер паспорта - " << form.credcard.number << endl;
+	cout << " | Место выдачи паспорта - " << form.credcard.given << endl;
+	cout << " | Баланс счёта - " << form.credcard.BalanceOfMoney << endl;
+	cout << " | Количество заключенных договоров - " << form.credcard.Agreement << endl;
+	cout << " | Продолжительность действия карты - " << form.dayToEndCard << endl;
+	cout << " | Сумма блокировки карты - " << form.lowLineOfMoney << endl;
+}
+void AgreementOfCreditCard::AddInf(int id, pd Info, int date, int low) {
+	IdAgreementDC = id;
+	form.credcard = Info;
+	form.dayToEndCard = date;
+	form.lowLineOfMoney = low;
 }
 
 
