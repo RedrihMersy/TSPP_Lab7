@@ -132,8 +132,9 @@ public:
 
 	bool ReplenishmentOfDeposit(ClientOfTheBank Client, AgreementDeposit Object, double money);
 	bool creditContribution(ClientOfTheBank Client, AgreementOfCredit Object, double money);
-	double СurrencyeExchange(double money, string currencySet, listOfCurrencies exchangeRates, string currencyGet);
-	listOfCurrencies getExchangeRates();
+
+	bool СurrencyeExchange(double money, string currencySet, exchangeRaters exchangeRates, string currencyGet);
+	exchangeRaters get_set_ExchangeRates(exchangeRaters listOfCurrecies);
 private:
 	ClientOfTheBank* OunClient;
 	exchangeRaters listOfCurrecies;
@@ -163,8 +164,23 @@ bool PayMasterOperator::Delivery(double money) {
 	return true;
 }
 
-bool PayMasterOperator::inputMessageToPayMasterForDelivery(ClientOfTheBank *Client, double inMoney) {
+exchangeRaters PayMasterOperator::get_set_ExchangeRates(exchangeRaters listOfCurrecies) {
+	double DTR = 0, RTD = 0;
+	cout << " | Введите индекс перевеода доллара в рубль: ";
+	cin >> DTR;
+	cout << " | Введдите индекс перевода рубля в доллар: " ;
+	cin >> RTD;
+	listOfCurrecies.DolToRub = DTR;
+	listOfCurrecies.RubToDol = RTD;
+	return listOfCurrecies;
+}
 
+bool PayMasterOperator::СurrencyeExchange(double money, string currencySet, exchangeRaters exchangeRates, string currencyGet) {
+	cout << " | Происходит перевод денежных средств!" << endl;
+	cout << " | Валюта которую нужно перевести - Доллар США" << endl;
+	cout << " | Валюта в котрую нужно перевести деньги - Рубль Российский." << endl;
+	cout << " | Если хотите обновить " << endl;
+	cout << " | Перевод закончен." << endl;
 }
 
 
