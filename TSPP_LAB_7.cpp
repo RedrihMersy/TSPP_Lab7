@@ -38,6 +38,7 @@ struct deposit {
 	double percent;
 	int days;
 	string valute;
+	double value;
 };
 struct credit {
 	pd data;
@@ -45,6 +46,7 @@ struct credit {
 	int days;
 	string valute;
 	bool pledge; // Залог.
+	double value;
 };
 
 
@@ -312,6 +314,7 @@ class Manager {
 protected:
 	bool setMessageToPayMasterForDelivery(ClientOfTheBank* Client, double money);
 	bool setMessageToPayMasterForReseptiomMoney(ClientOfTheBank* Client, double money);
+	PayMasterOperator* Cash1;
 public:
 	bool AddDataOfClint();
 	pd giveDataOfClint();
@@ -344,7 +347,7 @@ private:
 	int amountOfCreditCard;
 	int amountOfDebitCard;
 	int amountOfPayCard;
-	PayMasterOperator* Cash1;
+	
 };
 bool Manager::AddDataOfClint() {
 	//class ClientOfTheBank *Client1 = NULL;
@@ -439,18 +442,52 @@ public:
 		blanc.days = 240;
 		blanc.percent = 5;
 		blanc.valute = "rubl";
+		blanc.value = 50000;
 	}
-	ManagerOfDepost(string value, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
+	ManagerOfDepost(double value, string values, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
 		Client3 = new ClientOfTheBank();
 		blanc.data = Client3->GiveInformation;
 		blanc.days = days;
 		blanc.percent = per;
-		blanc.valute = value;
+		blanc.valute = values;
+		blanc.value = value;
 	}
+	void OpenDeposit();
 private:
 	class ClientOfTheBank *Client3 = NULL;
 	deposit blanc;
 };
+void ManagerOfDepost::OpenDeposit(){ 
+	int Yes = 0;
+	cout << " | Оставить информацию по умолчанию. 2 - Ввести новую информацию."<< endl;
+	cin >> Yes;
+	if (Yes == 2) {
+		cout << " | Вы ввели следующую информацию: " << endl;
+		blanc.data.FIO = "Fominv Igor Kirlovich";
+		blanc.data.Id = 241;
+		blanc.data.BalanceOfMoney = 1500;
+		blanc.data.Agreement = 2;
+		blanc.data.given = "RF, city Moscov";
+		blanc.data.number = "230 55221";
+		blanc.days = 360;
+		blanc.percent = 10;
+		blanc.valute = "rubl";
+		blanc.value = 10000;
+		cout << " | Порядковый номер - " << blanc.data.Id << endl;
+		cout << " | Ф. И. О. клиентa - " << blanc.data.FIO << endl;
+		cout << " | Номер паспорта - " << blanc.data.number << endl;
+		cout << " | Место выдачи паспорта - " << blanc.data.given << endl;
+		cout << " | Баланс счёта - " << blanc.data.BalanceOfMoney << endl;
+		cout << " | Количество заключенных договоров - " << blanc.data.Agreement << endl;
+
+		cout << " | Продолжительность контракта депозита - " << blanc.days << endl;
+		cout << " | Процент - " << blanc.percent << endl;
+		cout << " | Валюта депозита - " << blanc.valute << endl;
+		cout << " | КОЛИЧЕСТВО ДЕНЕГ - " << blanc.value << endl;
+	}
+	Client3->ChangeColOfAgreements(1);
+	setMessageToPayMasterForReseptiomMoney(Client3, blanc.value);
+}
 // Класс Менеджера по кредитам.
 class ManagerOfCredit : Manager {
 public:
