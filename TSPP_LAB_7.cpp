@@ -8,6 +8,7 @@
 #include <string>
 
 using namespace std;
+// Структура данных клиента банка.
 struct pd {
 	string FIO;
 	string number;
@@ -16,16 +17,60 @@ struct pd {
 	int Id;
 	int Agreement;
 };
-
+// Сутруктура кредитной карты.
 struct crcard {
 	pd credcard;
 	string dayToEndCard;
 	int lowLineOfMoney;
 };
-
+// Структура дебетовой карты. 
 struct dbcard {
 	pd debcard;
 	string dayToEndCard;
+};
+// Структура список валют
+struct exchangeRaters{
+	double DolToRub = 1.64;
+	double RubToDol = 0.25;
+};
+
+// Выполнение.
+int _tmain(int argc, _TCHAR* argv[])
+{
+	setlocale(LC_ALL, "Russian");
+	class Manager *MainManager = NULL;
+	MainManager = new Manager();
+	class PayMasterOperator *Casier1 = NULL;
+	Casier1 = new PayMasterOperator(0.25, 1.25, MainManager);
+
+
+	return 0;
+}
+
+//Класс кассир
+class PayMasterOperator {
+public:
+	PayMasterOperator() {
+		listOfCurrecies.DolToRub = 1.26;
+		listOfCurrecies.RubToDol = 0.25;
+	}
+	PayMasterOperator(double ruToUsa, double usaToru, Manager Object) {
+		listOfCurrecies.DolToRub = usaToru;
+		listOfCurrecies.RubToDol = ruToUsa;
+		MainManger = Object;
+	}
+	bool inputMessageToPayMasterForReseptiomMoney(ClientOfTheBank *Client, double outMoney);
+	bool ReseptiomMoney(ClientOfTheBank Client);
+	bool Delivery(ClientOfTheBank Client);
+	bool inputMessageToPayMasterForDelivery(ClientOfTheBank *Client, double inMoney);
+
+	bool ReplenishmentOfDeposit(ClientOfTheBank Client, AgreementDeposit Object, double money);
+	bool creditContribution(ClientOfTheBank Client, AgreementOfCredit Object, double money);
+	double СurrencyeExchange(double money, string currencySet, listOfCurrencies exchangeRates, string currencyGet);
+	listOfCurrencies getExchangeRates();
+private:
+	Manager MainManger;
+	exchangeRaters listOfCurrecies;
 };
 
 class ClientOfTheBank {
@@ -79,14 +124,14 @@ void ClientOfTheBank::ShowInformation() {
 	cout << " | Количество заключенных договоров - " << pasportData.Agreement << endl;
 }
 
-
+// ===================== Класс главного менеджера. 
 class Manager {
 public:
 	bool AddDataOfClint();
 	pd giveDataOfClint();
-	void makeAgrementDebCard();
-	bool setMessageToPayMasterForDelivery(ClientOfTheBank Client, <T> ObjecOfAgreement);
-	bool setMessageToPayMasterForReseptiomMoney(ClientOfTheBank Client, <T> ObjecOfAgreement);
+	void makeAgrement();
+	bool setMessageToPayMasterForDelivery(ClientOfTheBank* Client, double money);
+	bool setMessageToPayMasterForReseptiomMoney(ClientOfTheBank* Client, double money);
 	Manager() {
 		amountOfCreditCard = 3;
 		amountOfDebitCard =3;
@@ -94,12 +139,14 @@ public:
 		Client1 = new ClientOfTheBank();
 		Card1 = new AgreementOfCreditCard();
 		Card2 = new AgreementOfDebetCard();
+		PayMasterOperator Cash1();
 	}
-	Manager(int credit, int debit, int pay) {
+	Manager(int credit, int debit, int pay, PayMasterOperator *ObjectCash) {
 		amountOfCreditCard = pay;
 		amountOfDebitCard = pay;
 		amountOfPayCard = pay;
 		Client1 = new ClientOfTheBank();
+		Cash1 = ObjectCash;
 	}
 private:
 	class ClientOfTheBank *Client1 = NULL;
@@ -108,6 +155,7 @@ private:
 	int amountOfCreditCard;
 	int amountOfDebitCard;
 	int amountOfPayCard;
+	PayMasterOperator* Cash1;
 };
 bool Manager::AddDataOfClint() {
 	//class ClientOfTheBank *Client1 = NULL;
@@ -122,7 +170,8 @@ pd Manager::giveDataOfClint() {
 	return outerInformation;
 }
 
-void Manager::makeAgrementDebCard() {
+// Заключение договоров на офорление пластиковых карт.
+void Manager::makeAgrement() {
 	int watCardNeed = 0;
 	cout << " | Выполняется заключение договора."<< endl;
 	cout << " | Выберете какой договор нужно формить:" << endl;
@@ -147,6 +196,17 @@ void Manager::makeAgrementDebCard() {
 	}
 }
 
+bool Manager::setMessageToPayMasterForDelivery(ClientOfTheBank* Client, double money) {
+	Cash1->inputMessageToPayMasterForDelivery(Client1, 2500);
+	return true;
+}
+bool Manager::setMessageToPayMasterForReseptiomMoney(ClientOfTheBank* Client, double money) {
+	Cash1->inputMessageToPayMasterForReseptiomMoney(Client1, 2500);
+	return true;
+}
+
+
+// ======================== Класс соглашения на дебетовую карту.
 class AgreementOfDebetCard {
 public:
 	void ShowInf();
@@ -184,7 +244,7 @@ void AgreementOfDebetCard::AddInf(int id, pd Info, int date) {
 	form.debcard = Info;
 	form.dayToEndCard = date;
 }
-
+//======================= Класс на соглашение на кредитную карту.
 class AgreementOfCreditCard {
 public:
 	void ShowInf();
@@ -210,6 +270,7 @@ private:
 	crcard form;
 	int IdAgreementDC;
 };
+// Метод обзора информации.
 void AgreementOfCreditCard :: ShowInf(){
 	cout << " | Порядковый номер - " << form.credcard.Id << endl;
 	cout << " | Ф. И. О. клиентa - " << form.credcard.FIO << endl;
@@ -228,11 +289,6 @@ void AgreementOfCreditCard::AddInf(int id, pd Info, int date, int low) {
 }
 
 
-int _tmain(int argc, _TCHAR* argv[])
-{
-	setlocale(LC_ALL,"Russian");
-	class Manager *MainManager = NULL;
 
-	return 0;
-}
+
 
