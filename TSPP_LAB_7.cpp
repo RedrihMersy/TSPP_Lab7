@@ -20,13 +20,13 @@ struct pd {
 // Сутруктура кредитной карты.
 struct crcard {
 	pd credcard;
-	string dayToEndCard;
+	int dayToEndCard;
 	int lowLineOfMoney;
 };
 // Структура дебетовой карты. 
 struct dbcard {
 	pd debcard;
-	string dayToEndCard;
+	int dayToEndCard;
 };
 // Структура список валют
 struct exchangeRaters{
@@ -50,11 +50,13 @@ public:
 		form.debcard.BalanceOfMoney = 10;
 		form.dayToEndCard = 490;
 		ShowInf();
+		cout << " | Создан объект соглашение на дебетовую карту." << endl;
 	}
 	AgreementOfDebetCard(int id, pd Info, int date) {
 		IdAgreementDC = id;
 		form.debcard = Info;
 		form.dayToEndCard = date;
+		cout << " | Создан объект соглашение на дебетовую карту." << endl;
 	}
 private:
 	dbcard form;
@@ -81,7 +83,6 @@ public:
 	void ShowInf();
 	void AddInf(int id, pd Info, int date, int low);
 	AgreementOfCreditCard() {
-		IdAgreementDC = 0;
 		form.credcard.FIO = "Berezovik Grogoriy Victorovich";
 		form.credcard.given = "RF, city Djankoi";
 		form.credcard.Id = 1;
@@ -90,12 +91,15 @@ public:
 		form.credcard.BalanceOfMoney = 10;
 		form.dayToEndCard = 490;
 		form.lowLineOfMoney = -510;
+		IdAgreementDC = 0;
+		cout << " | Создан объект соглашение на кредитную карту." << endl;
 	}
 	AgreementOfCreditCard(int id, pd Info, int date, int low) {
 		IdAgreementDC = id;
 		form.credcard = Info;
 		form.dayToEndCard = date;
 		form.lowLineOfMoney = low;
+		cout << " | Создан объект соглашение на кредитную карту." << endl;
 	}
 private:
 	crcard form;
@@ -126,6 +130,12 @@ class ClientOfTheBank {
 public:
 	void ShowInformation();
 	void EnterInf(pd listOfDate);
+	void ChangeColOfAgreements(int col) {
+		pasportData.Agreement = pasportData.Agreement + col;
+	};
+	void ChangeCash(double cash) {
+		pasportData.BalanceOfMoney = pasportData.BalanceOfMoney + cash;
+	}
 	pd GiveInformation();
 	pd makeAgreement(pd *PasportData, int *Id, double *BalanceOfMoney, int & Agreement);
 	ClientOfTheBank() {
@@ -135,7 +145,7 @@ public:
 		pasportData.FIO = "Pupkin Petr Petrovich";
 		pasportData.number = "123 98745";
 		pasportData.given = "Rf. city Velikiy Novgorod";
-		cout << " | Создан объект клинета банка" << endl;
+		cout << " | Создан объект клиента банка" << endl;
 		ShowInformation();
 	}
 	ClientOfTheBank(int cod, int agreement, int zmoney, string fio, string number, string given) {
@@ -145,7 +155,7 @@ public:
 		pasportData.FIO = fio;
 		pasportData.number = number;
 		pasportData.given = given;
-		cout << " | Создан объект клинета банка" << endl;
+		cout << " | Создан объект клиента банка" << endl;
 		ShowInformation();
 	}
 private:
@@ -180,15 +190,18 @@ public:
 		//listOfCurrecies;
 		ClientOfTheBank* OunClient = NULL;
 		//ClientOfTheBank OunClient();
+		cout << " | Создан объект кассир банка" << endl;
 	}
 	PayMasterOperator(double ruToUsa, double usaToru/*, Manager Object*/) {
 		listOfCurrecies.DolToRub = usaToru;
 		listOfCurrecies.RubToDol = ruToUsa;
 		//MainManger = Object;
 		ClientOfTheBank* OunClient = NULL;
+		cout << " | Создан объект кассир банка" << endl;
 	}
 
 	ClientOfTheBank* inputMessageToPayMasterForReseptiomMoney(ClientOfTheBank *Client, double outMoney) {
+		cout << " | Передать кассиру нужно - " << outMoney << endl;
 		OunClient = Client;
 		ReseptiomMoney(outMoney);
 		return OunClient;
@@ -196,6 +209,7 @@ public:
 	bool ReseptiomMoney(double money);
 	bool Delivery(double money);
 	ClientOfTheBank* inputMessageToPayMasterForDelivery(ClientOfTheBank *Client, double inMoney) {
+		cout << " | Передать клиенту нужно - " << inMoney << endl;
 		OunClient = Client;
 		Delivery(inMoney);
 		return OunClient;
@@ -254,7 +268,13 @@ bool PayMasterOperator::СurrencyeExchange(double money, string currencySet, exch
 	cout << " | Валюта которую нужно перевести - " << currencySet  << endl;
 	cout << " | Количество - " << money << endl;
 	cout << " | Валюта в котрую нужно перевести деньги - " << currencyGet  << endl;
-	cout << " | Если хотите обновить курс валют нажмите 1 " << endl;
+	cout << " | Если хотите изменить количество средств для перевода, нажмите 1: ";
+	cin >> update;
+	if (update == 1) {
+		cout << " | Введите новое количество денег - ";
+		cin >> money;
+	}
+	cout << " | Если хотите обновить курс валют нажмите 1: ";
 	cin >> update;
 	if (update == 1) {
 		list = get_set_ExchangeRates(exchangeRates);
@@ -290,13 +310,17 @@ public:
 		Card1 = new AgreementOfCreditCard();
 		Card2 = new AgreementOfDebetCard();
 		PayMasterOperator Cash1();
+		cout << " | Создан объект менеджера банка" << endl;
 	}
 	Manager(int credit, int debit, int pay, PayMasterOperator *ObjectCash) {
-		amountOfCreditCard = pay;
-		amountOfDebitCard = pay;
+		amountOfCreditCard = credit;
+		amountOfDebitCard = debit;
 		amountOfPayCard = pay;
+		Card1 = new AgreementOfCreditCard();
+		Card2 = new AgreementOfDebetCard();
 		Client1 = new ClientOfTheBank();
 		Cash1 = ObjectCash;
+		cout << " | Создан объект менеджера банка |" << endl;
 	}
 private:
 	class ClientOfTheBank *Client1 = NULL;
@@ -324,7 +348,11 @@ pd Manager::giveDataOfClint() {
 // Заключение договоров на офорление пластиковых карт.
 void Manager::makeAgrement() {
 	int watCardNeed = 0;
-	int moneyToCard = 0;
+	double moneyToCard = 0;
+	pd dataOfClient;
+	dataOfClient = Client1->GiveInformation();
+	cout << " | Данные клиента - "<< endl;
+	Client1->ShowInformation();
 	//pd Data;
 	cout << " | Выполняется заключение договора."<< endl;
 	cout << " | Выберете какой договор нужно формить:" << endl;
@@ -333,20 +361,44 @@ void Manager::makeAgrement() {
 	cin >> watCardNeed;
 	switch (watCardNeed) {
 		case 1: {
-					cout << " | Ввидете сумму кредитных средств, которую хотите взять в банке (целое число): "<< endl;
-					cin >> moneyToCard;
-					//Card1->AddInf(1,Client1->GiveInformation(), 200, -500);
-					Card1->ShowInf();
-					setMessageToPayMasterForDelivery(Client1, moneyToCard);
+					if ((amountOfCreditCard != 0) && (amountOfCreditCard > 0)) {
+						cout << " | Ввидете сумму кредитных средств, которую хотите взять в банке (целое число): " << endl;
+						cin >> moneyToCard;
+						if (moneyToCard > 0 ) {
+							cout << " | За оформление карты снимется 200 рублей. " << endl;
+							moneyToCard - 200;
+						}
+						amountOfCreditCard--;
+						Card1->AddInf(1, dataOfClient, 200, -500);
+						Card1->ShowInf();
+						Client1->ChangeColOfAgreements(1);
+						setMessageToPayMasterForDelivery(Client1, moneyToCard);
+					}
+					else {
+						cout << " | Карт больше нет." << endl;
+						system("pause");
+					}
 				break;
 
 		}
 		case 2: {
-					cout << " | Ввидете сумму денежных средств, которую хотите положить в банк: " << endl; 
-					cin >> moneyToCard;
-					Card2->AddInf(1,Client1->GiveInformation(), 320);
-					Card2->ShowInf();
-					setMessageToPayMasterForReseptiomMoney(Client1, moneyToCard);
+					if ((amountOfDebitCard != 0) && (amountOfDebitCard >= 0)) {
+						cout << " | Ввидете сумму денежных средств, которую хотите положить в банк: " << endl;
+						cin >> moneyToCard;
+						if (moneyToCard > 0) {
+							cout << " | За оформление карты снимется 200 рублей. " << endl;
+							moneyToCard - 200;
+						}
+						Card2->AddInf(1, Client1->GiveInformation(), 320);
+						Card2->ShowInf();
+						amountOfDebitCard--;
+						Client1->ChangeColOfAgreements(1);
+						setMessageToPayMasterForReseptiomMoney(Client1, moneyToCard);
+					}
+					else {
+						cout << " | Карт больше нет." << endl;
+						system("pause");
+					}
 					break;
 		}
 		default: {
@@ -356,11 +408,11 @@ void Manager::makeAgrement() {
 }
 
 bool Manager::setMessageToPayMasterForDelivery(ClientOfTheBank* Client, double money) {
-	Cash1->inputMessageToPayMasterForDelivery(Client1, 2500);
+	Cash1->inputMessageToPayMasterForDelivery(Client1, money);
 	return true;
 }
 bool Manager::setMessageToPayMasterForReseptiomMoney(ClientOfTheBank* Client, double money) {
-	Cash1->inputMessageToPayMasterForReseptiomMoney(Client1, 2500);
+	Cash1->inputMessageToPayMasterForReseptiomMoney(Client1, money);
 	return true;
 }
 
@@ -383,9 +435,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	// Создание объекта Менеджера банка.
 	class Manager *MainManager = NULL;
 	MainManager = new Manager(3, 3, 3, Casier1);
-	//MainManager->makeAgrement();
+	
 	Casier1->СurrencyeExchange(850, "dollars", Rates, "rubli");
-
+	MainManager->makeAgrement();
 
 	system("pause");
 	return 0;
