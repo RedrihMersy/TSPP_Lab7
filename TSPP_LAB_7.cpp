@@ -38,45 +38,26 @@ struct exchangeRaters{
 int _tmain(int argc, _TCHAR* argv[])
 {
 	setlocale(LC_ALL, "Russian");
-	class Manager *MainManager = NULL;
-	MainManager = new Manager();
+
+	// Создание оъекта кассира банка.
 	class PayMasterOperator *Casier1 = NULL;
-	Casier1 = new PayMasterOperator(0.25, 1.25, MainManager);
+	Casier1 = new PayMasterOperator();
+
+	// Создание объекта Менеджера банка.
+	class Manager *MainManager = NULL;
+	MainManager = new Manager(3, 3, 3, Casier1);
+
+	
 
 
 	return 0;
 }
 
-//Класс кассир
-class PayMasterOperator {
-public:
-	PayMasterOperator() {
-		listOfCurrecies.DolToRub = 1.26;
-		listOfCurrecies.RubToDol = 0.25;
-	}
-	PayMasterOperator(double ruToUsa, double usaToru, Manager Object) {
-		listOfCurrecies.DolToRub = usaToru;
-		listOfCurrecies.RubToDol = ruToUsa;
-		MainManger = Object;
-	}
-	bool inputMessageToPayMasterForReseptiomMoney(ClientOfTheBank *Client, double outMoney);
-	bool ReseptiomMoney(ClientOfTheBank Client);
-	bool Delivery(ClientOfTheBank Client);
-	bool inputMessageToPayMasterForDelivery(ClientOfTheBank *Client, double inMoney);
-
-	bool ReplenishmentOfDeposit(ClientOfTheBank Client, AgreementDeposit Object, double money);
-	bool creditContribution(ClientOfTheBank Client, AgreementOfCredit Object, double money);
-	double СurrencyeExchange(double money, string currencySet, listOfCurrencies exchangeRates, string currencyGet);
-	listOfCurrencies getExchangeRates();
-private:
-	Manager MainManger;
-	exchangeRaters listOfCurrecies;
-};
-
 class ClientOfTheBank {
 public:
 	void ShowInformation();
-	void GiveInformation(pd *PasportData, int *Id, double *BalanceOfMoney, int & Agreement);
+	void EnterInf(pd listOfDate);
+	pd GiveInformation();
 	pd makeAgreement(pd *PasportData, int *Id, double *BalanceOfMoney, int & Agreement);
 	ClientOfTheBank() {
 		pasportData.Id = 1;
@@ -102,14 +83,8 @@ private:
 	pd pasportData;
 };
 
-void ClientOfTheBank::GiveInformation(pd *PasportDates, int *Ides, double *BalanceOfMones, int & Agreementes) {
-	*Ides = pasportData.Id;
-	*BalanceOfMones = pasportData.BalanceOfMoney;
-	Agreementes = pasportData.Agreement;
-	PasportDates->FIO = pasportData.FIO;
-	PasportDates->given = pasportData.given;
-	PasportDates->number = pasportData.number;
-	
+pd ClientOfTheBank::GiveInformation() {
+	return pasportData;
 }
 
 pd ClientOfTheBank::makeAgreement(pd *PasportData, int *Id, double *BalanceOfMoney, int & Agreement) {
@@ -123,6 +98,76 @@ void ClientOfTheBank::ShowInformation() {
 	cout << " | Баланс счёта - " << pasportData.BalanceOfMoney << endl;
 	cout << " | Количество заключенных договоров - " << pasportData.Agreement << endl;
 }
+void ClientOfTheBank::EnterInf(pd listOfDate) {
+	pasportData = listOfDate;
+}
+
+//Класс кассир
+class PayMasterOperator {
+public:
+	PayMasterOperator() {
+		listOfCurrecies.DolToRub = 1.26;
+		listOfCurrecies.RubToDol = 0.25;
+		ClientOfTheBank* COunClient = NULL;
+	}
+	PayMasterOperator(double ruToUsa, double usaToru/*, Manager Object*/) {
+		listOfCurrecies.DolToRub = usaToru;
+		listOfCurrecies.RubToDol = ruToUsa;
+		//MainManger = Object;
+		ClientOfTheBank* OunClient = NULL;
+	}
+
+	ClientOfTheBank* inputMessageToPayMasterForReseptiomMoney(ClientOfTheBank *Client, double outMoney) {
+		OunClient = Client;
+		ReseptiomMoney(outMoney);
+		return OunClient;
+	}
+	bool ReseptiomMoney(double money);
+	bool Delivery(double money);
+	ClientOfTheBank* inputMessageToPayMasterForDelivery(ClientOfTheBank *Client, double inMoney) {
+		OunClient = Client;
+		Delivery(inMoney);
+		return OunClient;
+	};
+
+	bool ReplenishmentOfDeposit(ClientOfTheBank Client, AgreementDeposit Object, double money);
+	bool creditContribution(ClientOfTheBank Client, AgreementOfCredit Object, double money);
+	double СurrencyeExchange(double money, string currencySet, listOfCurrencies exchangeRates, string currencyGet);
+	listOfCurrencies getExchangeRates();
+private:
+	ClientOfTheBank* OunClient;
+	exchangeRaters listOfCurrecies;
+};
+
+bool PayMasterOperator::ReseptiomMoney(double money)  {
+	cout << " | Присходит процесс передачи денег от клиента к кассиру." << endl;
+	cout << " | Клиент передаёт денег - " << money << endl;
+	pd NewClient;
+	NewClient = OunClient->GiveInformation();
+	NewClient.BalanceOfMoney = NewClient.BalanceOfMoney - money;
+	OunClient->EnterInf(NewClient);
+	cout << " | Процесс закончен." << endl;
+	OunClient->ShowInformation();
+	return true;
+}
+
+bool PayMasterOperator::Delivery(double money) {
+	cout << " | Присходит процесс передачи денег от кассира к клиенту." << endl;
+	cout << " | Кассир передаёт деньги - " << money << endl;
+	pd NewClient;
+	NewClient = OunClient->GiveInformation();
+	NewClient.BalanceOfMoney = NewClient.BalanceOfMoney + money;
+	OunClient->EnterInf(NewClient);
+	cout << " | Процесс закончен." << endl;
+	OunClient->ShowInformation();
+	return true;
+}
+
+bool PayMasterOperator::inputMessageToPayMasterForDelivery(ClientOfTheBank *Client, double inMoney) {
+
+}
+
+
 
 // ===================== Класс главного менеджера. 
 class Manager {
@@ -244,6 +289,7 @@ void AgreementOfDebetCard::AddInf(int id, pd Info, int date) {
 	form.debcard = Info;
 	form.dayToEndCard = date;
 }
+
 //======================= Класс на соглашение на кредитную карту.
 class AgreementOfCreditCard {
 public:
@@ -270,6 +316,7 @@ private:
 	crcard form;
 	int IdAgreementDC;
 };
+
 // Метод обзора информации.
 void AgreementOfCreditCard :: ShowInf(){
 	cout << " | Порядковый номер - " << form.credcard.Id << endl;
@@ -281,6 +328,7 @@ void AgreementOfCreditCard :: ShowInf(){
 	cout << " | Продолжительность действия карты - " << form.dayToEndCard << endl;
 	cout << " | Сумма блокировки карты - " << form.lowLineOfMoney << endl;
 }
+
 void AgreementOfCreditCard::AddInf(int id, pd Info, int date, int low) {
 	IdAgreementDC = id;
 	form.credcard = Info;
