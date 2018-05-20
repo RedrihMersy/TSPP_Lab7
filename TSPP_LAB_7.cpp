@@ -33,6 +33,19 @@ struct exchangeRaters{
 	double DolToRub = 1.64;
 	double RubToDol = 0.25;
 };
+struct deposit {
+	pd data;
+	double percent;
+	int days;
+	string valute;
+};
+struct credit {
+	pd data;
+	double percent;
+	int days;
+	string valute;
+	bool pledge; // Залог.
+};
 
 
 // ======================== Класс соглашения на дебетовую карту.
@@ -296,12 +309,14 @@ bool PayMasterOperator::СurrencyeExchange(double money, string currencySet, exch
 
 // ===================== Класс главного менеджера. 
 class Manager {
+protected:
+	bool setMessageToPayMasterForDelivery(ClientOfTheBank* Client, double money);
+	bool setMessageToPayMasterForReseptiomMoney(ClientOfTheBank* Client, double money);
 public:
 	bool AddDataOfClint();
 	pd giveDataOfClint();
 	void makeAgrement();
-	bool setMessageToPayMasterForDelivery(ClientOfTheBank* Client, double money);
-	bool setMessageToPayMasterForReseptiomMoney(ClientOfTheBank* Client, double money);
+
 	Manager() {
 		amountOfCreditCard = 3;
 		amountOfDebitCard =3;
