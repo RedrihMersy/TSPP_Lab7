@@ -130,8 +130,8 @@ public:
 		return OunClient;
 	};
 
-	bool ReplenishmentOfDeposit(ClientOfTheBank Client, AgreementDeposit Object, double money);
-	bool creditContribution(ClientOfTheBank Client, AgreementOfCredit Object, double money);
+	//bool ReplenishmentOfDeposit(ClientOfTheBank Client, AgreementDeposit Object, double money);
+	//bool creditContribution(ClientOfTheBank Client, AgreementOfCredit Object, double money);
 
 	bool СurrencyeExchange(double money, string currencySet, exchangeRaters exchangeRates, string currencyGet);
 	exchangeRaters get_set_ExchangeRates(exchangeRaters listOfCurrecies);
@@ -176,10 +176,22 @@ exchangeRaters PayMasterOperator::get_set_ExchangeRates(exchangeRaters listOfCur
 }
 
 bool PayMasterOperator::СurrencyeExchange(double money, string currencySet, exchangeRaters exchangeRates, string currencyGet) {
+	int update = 0;
+	double toClint = 0;
 	cout << " | Происходит перевод денежных средств!" << endl;
-	cout << " | Валюта которую нужно перевести - Доллар США" << endl;
-	cout << " | Валюта в котрую нужно перевести деньги - Рубль Российский." << endl;
-	cout << " | Если хотите обновить " << endl;
+	cout << " | Валюта которую нужно перевести - " << currencySet  << endl;
+	cout << " | Валюта в котрую нужно перевести деньги - " << currencyGet  << endl;
+	cout << " | Если хотите обновить курс валют нажмите 1 " << endl;
+	if (update == 1) {
+		get_set_ExchangeRates(exchangeRates);
+	}
+	if ((currencySet == "doolars") && (currencyGet == "rubli")) {
+		toClint = money* exchangeRates.DolToRub;
+	}
+	if ((currencySet == "rubli") && (currencyGet == "dollars")) {
+		toClint = money* exchangeRates.RubToDol;
+	}
+	cout << " | Клиенту передаётся денег: " << toClint << " В валюте - " << currencyGet << endl;
 	cout << " | Перевод закончен." << endl;
 }
 
@@ -234,6 +246,7 @@ pd Manager::giveDataOfClint() {
 // Заключение договоров на офорление пластиковых карт.
 void Manager::makeAgrement() {
 	int watCardNeed = 0;
+	int moneyToCard = 0;
 	cout << " | Выполняется заключение договора."<< endl;
 	cout << " | Выберете какой договор нужно формить:" << endl;
 	cout << " | Нажмите 1, если хотите оформить договор на получение кредитной карты." << endl;
@@ -241,14 +254,20 @@ void Manager::makeAgrement() {
 	cin >> watCardNeed;
 	switch (watCardNeed) {
 		case 1: {
+					cout << " | Ввидете сумму кредитных средств, которую хотите взять в банке (целое число): "<< endl;
+					cin >> moneyToCard;
 					Card1->AddInf(1, Client1->GiveInformation, 200, -500);
 					Card1->ShowInf;
+					setMessageToPayMasterForDelivery(Client1, moneyToCard);
 				break;
 
 		}
 		case 2: {
+					cout << " | Ввидете сумму денежных средств, которую хотите положить в банк: " << endl; 
+					cin >> moneyToCard;
 					Card2->AddInf(1, Client1->GiveInformation, 320);
 					Card2->ShowInf;
+					setMessageToPayMasterForReseptiomMoney(Client1, moneyToCard);
 					break;
 		}
 		default: {
