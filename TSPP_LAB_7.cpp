@@ -430,8 +430,71 @@ bool Manager::setMessageToPayMasterForReseptiomMoney(ClientOfTheBank* Client, do
 	Cash1->inputMessageToPayMasterForReseptiomMoney(Client1, money);
 	return true;
 }
-
-
+// Класс Менеджера по депозитам.
+class ManagerOfDepost : Manager {
+public:
+	ManagerOfDepost() :Manager(){
+		Client3 = new ClientOfTheBank();
+		blanc.data = Client3->GiveInformation;
+		blanc.days = 240;
+		blanc.percent = 5;
+		blanc.valute = "rubl";
+	}
+	ManagerOfDepost(string value, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
+		Client3 = new ClientOfTheBank();
+		blanc.data = Client3->GiveInformation;
+		blanc.days = days;
+		blanc.percent = per;
+		blanc.valute = value;
+	}
+private:
+	class ClientOfTheBank *Client3 = NULL;
+	deposit blanc;
+};
+// Класс Менеджера по кредитам.
+class ManagerOfCredit : Manager {
+public:
+	ManagerOfCredit() :Manager() {
+		Client2 = new ClientOfTheBank();
+		blanc.data = Client2->GiveInformation;
+		blanc.days = 240;
+		blanc.percent = 5;
+		blanc.valute = "rubl";
+		blanc.pledge = false;
+	}
+	ManagerOfCredit(bool zalog, string value, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
+		Client2 = new ClientOfTheBank();
+		blanc.data = Client2->GiveInformation;
+		blanc.days = days;
+		blanc.percent = per;
+		blanc.valute = value;
+		blanc.pledge = zalog;
+	}
+private:
+	class ClientOfTheBank *Client2 = NULL;
+	credit blanc;
+};
+// Класс страховщика.
+class Insurer: Manager {
+public:
+	Insurer() :Manager(){
+		Client4 = new ClientOfTheBank();
+		blanc.data = Client4->GiveInformation;
+		blanc.days = 240;
+		blanc.percent = 5;
+		blanc.valute = "rubl";
+	}
+	Insurer(string value,double per, int days ,int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit,debit,pay, ObjectCash) {
+		Client4 = new ClientOfTheBank();
+		blanc.data = Client4->GiveInformation;
+		blanc.days = days;
+		blanc.percent = per;
+		blanc.valute = value;
+	}
+private:
+	class ClientOfTheBank *Client4 = NULL;
+	deposit blanc;
+};
 
 
 // Выполнение.
