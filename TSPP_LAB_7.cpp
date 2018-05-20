@@ -185,6 +185,7 @@ pd ClientOfTheBank::makeAgreement(pd *PasportData, int *Id, double *BalanceOfMon
 	return pasportData;
 }
 void ClientOfTheBank::ShowInformation() {
+	cout << " |=============================================================================" << endl;
 	cout << " | Порядковый номер - " << pasportData.Id << endl;
 	cout << " | Ф. И. О. клиентa - " << pasportData.FIO << endl;
 	cout << " | Номер паспорта - " << pasportData.number << endl;
@@ -241,6 +242,7 @@ private:
 };
 
 bool PayMasterOperator::ReseptiomMoney(double money)  {
+	cout << " |=============================================================================" << endl;
 	cout << " | Присходит процесс передачи денег от клиента к кассиру." << endl;
 	cout << " | Клиент передаёт денег - " << money << endl;
 	pd NewClient;
@@ -253,6 +255,7 @@ bool PayMasterOperator::ReseptiomMoney(double money)  {
 }
 
 bool PayMasterOperator::Delivery(double money) {
+	cout << " |=============================================================================" << endl;
 	cout << " | Присходит процесс передачи денег от кассира к клиенту." << endl;
 	cout << " | Кассир передаёт деньги - " << money << endl;
 	pd NewClient;
@@ -266,6 +269,7 @@ bool PayMasterOperator::Delivery(double money) {
 
 exchangeRaters PayMasterOperator::get_set_ExchangeRates(exchangeRaters listOfCurrecies) {
 	double DTR = 0, RTD = 0;
+	cout << " |=============================================================================" << endl;
 	cout << " | Введите индекс перевеода доллара в рубль: ";
 	cin >> DTR;
 	cout << " | Введдите индекс перевода рубля в доллар: " ;
@@ -279,6 +283,7 @@ bool PayMasterOperator::СurrencyeExchange(double money, string currencySet, exch
 	int update = 0;
 	double toClint = 0;
 	exchangeRaters list = exchangeRates;
+	cout << " |=============================================================================" << endl;
 	cout << " | Происходит перевод денежных средств!" << endl;
 	cout << " | Валюта которую нужно перевести - " << currencySet  << endl;
 	cout << " | Количество - " << money << endl;
@@ -365,6 +370,7 @@ pd Manager::giveDataOfClint() {
 
 // Заключение договоров на офорление пластиковых карт.
 void Manager::makeAgrement() {
+	cout << " |=============================================================================" << endl;
 	int watCardNeed = 0;
 	double moneyToCard = 0;
 	pd dataOfClient;
@@ -438,7 +444,7 @@ class ManagerOfDepost : Manager {
 public:
 	ManagerOfDepost() :Manager(){
 		Client3 = new ClientOfTheBank();
-		blanc.data = Client3->GiveInformation;
+		blanc.data = Client3->GiveInformation();
 		blanc.days = 240;
 		blanc.percent = 5;
 		blanc.valute = "rubl";
@@ -446,7 +452,7 @@ public:
 	}
 	ManagerOfDepost(double value, string values, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
 		Client3 = new ClientOfTheBank();
-		blanc.data = Client3->GiveInformation;
+		blanc.data = Client3->GiveInformation();
 		blanc.days = days;
 		blanc.percent = per;
 		blanc.valute = values;
@@ -458,6 +464,7 @@ private:
 	deposit blanc;
 };
 void ManagerOfDepost::OpenDeposit(){ 
+	cout << " |=============================================================================" << endl;
 	int Yes = 0;
 	cout << " | Оставить информацию по умолчанию. 2 - Ввести новую информацию."<< endl;
 	cin >> Yes;
@@ -493,7 +500,7 @@ class ManagerOfCredit : Manager {
 public:
 	ManagerOfCredit() :Manager() {
 		Client2 = new ClientOfTheBank();
-		blanc.data = Client2->GiveInformation;
+		blanc.data = Client2->GiveInformation();
 		blanc.days = 240;
 		blanc.percent = 5;
 		blanc.valute = "rubl";
@@ -501,7 +508,7 @@ public:
 	}
 	ManagerOfCredit(bool zalog, string value, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
 		Client2 = new ClientOfTheBank();
-		blanc.data = Client2->GiveInformation;
+		blanc.data = Client2->GiveInformation();
 		blanc.days = days;
 		blanc.percent = per;
 		blanc.valute = value;
@@ -516,14 +523,14 @@ class Insurer: Manager {
 public:
 	Insurer() :Manager(){
 		Client4 = new ClientOfTheBank();
-		blanc.data = Client4->GiveInformation;
+		blanc.data = Client4->GiveInformation();
 		blanc.days = 240;
 		blanc.percent = 5;
 		blanc.valute = "rubl";
 	}
 	Insurer(string value,double per, int days ,int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit,debit,pay, ObjectCash) {
 		Client4 = new ClientOfTheBank();
-		blanc.data = Client4->GiveInformation;
+		blanc.data = Client4->GiveInformation();
 		blanc.days = days;
 		blanc.percent = per;
 		blanc.valute = value;
@@ -553,6 +560,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	Casier1->СurrencyeExchange(850, "dollars", Rates, "rubli");
 	MainManager->makeAgrement();
+	cout << " |=============================================================================" << endl;
+	cout << " | Выполняется оформление кредита!"<< endl;
+	cout << " |=============================================================================" << endl;
+	class ManagerOfDepost* OperatorOfDeposit = NULL;
+	OperatorOfDeposit = new ManagerOfDepost(90000, "rubl", 5, 200, 3, 3, 3, Casier1);
+	OperatorOfDeposit->OpenDeposit();
+	//ManagerOfDepost(double value, string values, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
 
 	system("pause");
 	return 0;
