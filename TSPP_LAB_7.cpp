@@ -149,8 +149,14 @@ public:
 	void ChangeColOfAgreements(int col) {
 		pasportData.Agreement = pasportData.Agreement + col;
 	};
-	void ChangeCash(double cash) {
-		pasportData.BalanceOfMoney = pasportData.BalanceOfMoney + cash;
+	int minusCash(double cash) {
+		if ((pasportData.BalanceOfMoney > 0) && (pasportData.BalanceOfMoney - cash >= 0)) {
+			pasportData.BalanceOfMoney = pasportData.BalanceOfMoney - cash;
+			return 1;
+		}
+		else {
+			return 0;
+		}
 	}
 	pd GiveInformation();
 	pd makeAgreement(pd *PasportData, int *Id, double *BalanceOfMoney, int & Agreement);
@@ -227,10 +233,36 @@ public:
 	}
 
 	ClientOfTheBank* inputMessageToPayMasterForReseptiomMoney(ClientOfTheBank *Client, double outMoney) {
+		int tru_false = 0;
+		pd inf;
+		inf = Client->GiveInformation();
+		double money = outMoney;
 		cout << " | Передать кассиру нужно - " << outMoney << endl;
 		//OunClient->EnterInf(Client->GiveInformation());
 		OunClient = Client;
-		OunClient->ChangeMoney(outMoney);
+		tru_false = OunClient->minusCash(outMoney);
+		if (!tru_false) {
+			cout << " | Не удалось. Нет денег на счете клиента." << endl;
+			cout << " | Введите - 1 что бы пополнить счёт: " ;
+			cin >> tru_false;
+			if (tru_false == 1) {
+				cout << " | Введите сумму пополнения: (не менее " << money - inf.BalanceOfMoney << " )";
+				cin >> outMoney;
+				if (outMoney >= money - inf.BalanceOfMoney) {
+					inf.BalanceOfMoney = inf.BalanceOfMoney + (outMoney - money);
+					Client->EnterInf(inf);
+					ReseptiomMoney(outMoney);
+				}
+				else {
+					cout << " | Маловато денег. Нужно не менее: " << money;
+					return OunClient;
+				}
+			}
+			else {
+				return OunClient;
+			}
+		}
+		//OunClient->ChangeMoney(outMoney);
 		ReseptiomMoney(outMoney);
 		return OunClient;
 	}
@@ -440,7 +472,7 @@ void Manager::makeAgrement() {
 						cin >> moneyToCard;
 						if (moneyToCard > 0) {
 							cout << " | За оформление карты снимется 200 рублей. " << endl;
-							moneyToCard = moneyToCard - 200;
+							moneyToCard = moneyToCard + 200;
 						}
 						Card2->AddInf(1, Client1->GiveInformation(), 320);
 						Card2->ShowInf();
@@ -627,12 +659,13 @@ public:
 		blanc.percent = 5;
 		blanc.valute = "rubl";
 	}
-	Insurer(string value,double per, int days ,int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit,debit,pay, ObjectCash) {
+	Insurer(double money,string value,double per, int days ,int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit,debit,pay, ObjectCash) {
 		Client4 = new ClientOfTheBank();
 		blanc.data = Client4->GiveInformation();
 		blanc.days = days;
 		blanc.percent = per;
 		blanc.valute = value;
+		blanc.value = money;
 	}
 	void Open();
 private:
@@ -649,7 +682,7 @@ void Insurer::Open() {
 		cout << " | Вы ввели следующую информацию: " << endl;
 		blanc.data.FIO = "Baron Graf Lordovich";
 		blanc.data.Id = 555;
-		blanc.data.BalanceOfMoney = 1000000;
+		blanc.data.BalanceOfMoney = 990000;
 		blanc.data.Agreement = 100;
 		blanc.data.given = "RF, city Moscov, Palati";
 		blanc.data.number = "111 225522";
@@ -657,7 +690,6 @@ void Insurer::Open() {
 		blanc.days = 999999;
 		blanc.percent = 0;
 		blanc.value = 444333;
-		//blanc.pledge = true;
 		cout << " | Порядковый номер - " << blanc.data.Id << endl;
 		cout << " | Ф. И. О. клиентa - " << blanc.data.FIO << endl;
 		cout << " | Номер паспорта - " << blanc.data.number << endl;
@@ -668,10 +700,18 @@ void Insurer::Open() {
 		cout << " | Процент выплаты каждый месяц - " << blanc.percent << endl;
 		cout << " | Вид страховки - " << blanc.valute << endl;
 		cout << " | Выплаты в случае скоропостижной смерти - " << blanc.value << endl;
-		//if (blanc.pledge) {
-		//	cout << " | Предоставлен залог - " << endl;
-		//}
-
+	}
+	else {
+		cout << " | Порядковый номер - " << blanc.data.Id << endl;
+		cout << " | Ф. И. О. клиентa - " << blanc.data.FIO << endl;
+		cout << " | Номер паспорта - " << blanc.data.number << endl;
+		cout << " | Место выдачи паспорта - " << blanc.data.given << endl;
+		cout << " | Баланс счёта - " << blanc.data.BalanceOfMoney << endl;
+		cout << " | Количество заключенных договоров - " << blanc.data.Agreement << endl;
+		cout << " | Продолжительность контракта строхования - " << blanc.days << endl;
+		cout << " | Процент выплаты каждый месяц - " << blanc.percent << endl;
+		cout << " | Вид страховки - " << blanc.valute << endl;
+		cout << " | Выплаты в случае скоропостижной смерти - " << blanc.value << endl;
 	}
 	Client4->EnterInf(blanc.data);
 	cout << " | Данные клиента на начало операции - " << endl;
@@ -758,7 +798,13 @@ int _tmain(int argc, _TCHAR* argv[])
 
 			}
 			case 5: {
-
+						cout << " |=============================================================================" << endl;
+						cout << " | Выполняется оформление cтраховки!" << endl;
+						cout << " |=============================================================================" << endl;
+						cout << " -|- Вызван конструктор объекта Страховщик -|-" << endl;
+						class Insurer* Inurers = NULL;
+						Inurers = new Insurer(7800,"Strahovka avtomobilia",2, 90, 3, 3, 3, Casier1);
+						Inurers->Open();
 						cout << " | Вы вышли из отдела банка." << endl;
 						system("pause");
 						break;
