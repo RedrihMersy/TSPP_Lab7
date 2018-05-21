@@ -558,11 +558,14 @@ int _tmain(int argc, _TCHAR* argv[])
 	Casier1 = new PayMasterOperator(0.25, 1.25);
 	// Меню.
 	do {
+		system("cls");
 		cout << " | Вы находитесь перед входом в отделение банка, ваши действия." << endl;
 		cout << " | Выберете нажав соответствующую цифру:" << endl;
 		cout << " | 1 - Зайти в банк и выполнить обмен валют." << endl;
 		cout << " | 2 - Зайти в банк и оформить пластиковую карту." << endl;
 		cout << " | 3 - Зайти в банк и оформить депозит." << endl;
+		cout << " | 4 - Зайти в банк и оформить кредит." << endl;
+		cout << " | 5 - Зайти в банк и оформить страховку." << endl;
 		cout << " | 0 - Пойти домой." << endl;
 		cout << " | =======================================================================" << endl;
 		cin >> action;
@@ -602,24 +605,30 @@ int _tmain(int argc, _TCHAR* argv[])
 						break;
 
 			}
+			case 4: {
+
+						cout << " | Вы вышли из отдела банка." << endl;
+						system("pause");
+						break;
+
+			}
+			case 5: {
+
+						cout << " | Вы вышли из отдела банка." << endl;
+						system("pause");
+						break;
+
+			}
 			default: {
 						 cout << " | Вы ввели неподходящее число! "<< endl;
 						 system("pause");
 			}
 		}
 	} while (true);
-	
-
-	
-
 	//class PayMasterOperator *Casier2 = NULL;
 	//class	Search *Step = NULL;
-
 	//Casier2 = new PayMasterOperator();
 	// Создание объекта Менеджера банка.
-
-
-	
 	//ManagerOfDepost(double value, string values, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
 
 	system("pause");
