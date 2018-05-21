@@ -510,7 +510,6 @@ void ManagerOfDepost::OpenDeposit(){
 		cout << " | Место выдачи паспорта - " << blanc.data.given << endl;
 		cout << " | Баланс счёта - " << blanc.data.BalanceOfMoney << endl;
 		cout << " | Количество заключенных договоров - " << blanc.data.Agreement << endl;
-
 		cout << " | Продолжительность контракта депозита - " << blanc.days << endl;
 		cout << " | Процент - " << blanc.percent << endl;
 		cout << " | Валюта депозита - " << blanc.valute << endl;
@@ -536,7 +535,7 @@ public:
 		blanc.valute = "rubl";
 		blanc.pledge = false;
 	}
-	ManagerOfCredit(bool zalog, string value, double per, int days, int credit, int debit, int pay,/* Manager* Object,*/ PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
+	ManagerOfCredit(bool zalog, string value, double per, int days,/* int credit, int debit, int pay*/,/* Manager* Object,*/ PayMasterOperator *ObjectCash) :Manager(/*credit, debit, pay, */ObjectCash) {
 		Client2 = new ClientOfTheBank();
 		blanc.data = Client2->GiveInformation();
 		blanc.days = days;
@@ -544,10 +543,53 @@ public:
 		blanc.valute = value;
 		blanc.pledge = zalog;
 	}
+	void OpenCredit();
 private:
 	class ClientOfTheBank *Client2 = NULL;
 	credit blanc;
 };
+void ManagerOfCredit::OpenCredit() {
+	cout << " |=============================================================================" << endl;
+	cout << " | Выполняется оформление бланка кредита." << endl;
+	int Yes = 0;
+	cout << " | Оставить информацию по умолчанию. 2 - Ввести новую информацию." << endl;
+	cin >> Yes;
+	if (Yes == 2) {
+		cout << " | Вы ввели следующую информацию: " << endl;
+		blanc.data.FIO = "Ivanov Ivan Ivanovich";
+		blanc.data.Id = 06;
+		blanc.data.BalanceOfMoney = 510;
+		blanc.data.Agreement = 9;
+		blanc.data.given = "RF, Omsk";
+		blanc.data.number = "632 74523";
+		blanc.valute = "rubli";
+		blanc.days = 360;
+		blanc.percent = 5;
+		blanc.value = 1000000;
+		blanc.pledge = true;
+		cout << " | Порядковый номер - " << blanc.data.Id << endl;
+		cout << " | Ф. И. О. клиентa - " << blanc.data.FIO << endl;
+		cout << " | Номер паспорта - " << blanc.data.number << endl;
+		cout << " | Место выдачи паспорта - " << blanc.data.given << endl;
+		cout << " | Баланс счёта - " << blanc.data.BalanceOfMoney << endl;
+		cout << " | Количество заключенных договоров - " << blanc.data.Agreement << endl;
+		cout << " | Продолжительность контракта по кредиту - " << blanc.days << endl;
+		cout << " | Процент годовых - " << blanc.percent << endl;
+		cout << " | Валюта выделяемых стредств - " << blanc.valute << endl;
+		cout << " | Количество кредитных средств - " << blanc.value << endl;
+		if (blanc.pledge) {
+			cout << " | Предоставлен залог - " << endl;
+		}
+		
+	}
+	Client2->EnterInf(blanc.data);
+	cout << " | Данные клиента на начало операции - " << endl;
+	Client2->ShowInformation();
+	Client2->ChangeColOfAgreements(1);
+	//	Client3->ShowInformation();
+	system("pause");
+	setMessageToPayMasterForDelivery(Client2, blanc.value);
+}
 // Класс страховщика.
 class Insurer: Manager {
 public:
@@ -565,10 +607,55 @@ public:
 		blanc.percent = per;
 		blanc.valute = value;
 	}
+	void Open();
 private:
 	class ClientOfTheBank *Client4 = NULL;
 	deposit blanc;
 };
+void Insurer::Open() {
+	cout << " |=============================================================================" << endl;
+	cout << " | Выполняется оформление бланка кредита." << endl;
+	int Yes = 0;
+	cout << " | Оставить информацию по умолчанию. 2 - Ввести новую информацию." << endl;
+	cin >> Yes;
+	if (Yes == 2) {
+		cout << " | Вы ввели следующую информацию: " << endl;
+		blanc.data.FIO = "Baron Graf Lordovich";
+		blanc.data.Id = 555;
+		blanc.data.BalanceOfMoney = 1000000;
+		blanc.data.Agreement = 100;
+		blanc.data.given = "RF, city Moscov, Palati";
+		blanc.data.number = "111 225522";
+		blanc.valute = " Strahovanie domashego petomca. Petomec - kuznechik. Imia - Diktator.";
+		blanc.days = 999999;
+		blanc.percent = 0;
+		blanc.value = 444333;
+		//blanc.pledge = true;
+		cout << " | Порядковый номер - " << blanc.data.Id << endl;
+		cout << " | Ф. И. О. клиентa - " << blanc.data.FIO << endl;
+		cout << " | Номер паспорта - " << blanc.data.number << endl;
+		cout << " | Место выдачи паспорта - " << blanc.data.given << endl;
+		cout << " | Баланс счёта - " << blanc.data.BalanceOfMoney << endl;
+		cout << " | Количество заключенных договоров - " << blanc.data.Agreement << endl;
+		cout << " | Продолжительность контракта строхования - " << blanc.days << endl;
+		cout << " | Процент выплаты каждый месяц - " << blanc.percent << endl;
+		cout << " | Вид страховки - " << blanc.valute << endl;
+		cout << " | Выплаты в случае скоропостижной смерти - " << blanc.value << endl;
+		//if (blanc.pledge) {
+		//	cout << " | Предоставлен залог - " << endl;
+		//}
+
+	}
+	Client4->EnterInf(blanc.data);
+	cout << " | Данные клиента на начало операции - " << endl;
+	Client4->ShowInformation();
+	Client4->ChangeColOfAgreements(1);
+	//	Client3->ShowInformation();
+	system("pause");
+	setMessageToPayMasterForReseptiomMoney(Client4, blanc.value);
+}
+
+
 
 
 // Выполнение.
