@@ -64,14 +64,14 @@ public:
 		form.debcard.Agreement = 0;
 		form.debcard.BalanceOfMoney = 10;
 		form.dayToEndCard = 490;
-		ShowInf();
-		cout << " | Создан объект соглашение на дебетовую карту." << endl;
+		//ShowInf();
+		cout << " | Вызван конструткор соглашения на дебетовую карту. |" << endl;
 	}
 	AgreementOfDebetCard(int id, pd Info, int date) {
 		IdAgreementDC = id;
 		form.debcard = Info;
 		form.dayToEndCard = date;
-		cout << " | Создан объект соглашение на дебетовую карту." << endl;
+		cout << " | Вызван конструткор соглашения на дебетовую карту. |" << endl;
 	}
 private:
 	dbcard form;
@@ -107,14 +107,14 @@ public:
 		form.dayToEndCard = 490;
 		form.lowLineOfMoney = -510;
 		IdAgreementDC = 0;
-		cout << " | Создан объект соглашение на кредитную карту." << endl;
+		cout << " | Вызван конструткор соглашения на кредитную карту |" << endl;
 	}
 	AgreementOfCreditCard(int id, pd Info, int date, int low) {
 		IdAgreementDC = id;
 		form.credcard = Info;
 		form.dayToEndCard = date;
 		form.lowLineOfMoney = low;
-		cout << " | Создан объект соглашение на кредитную карту." << endl;
+		cout << " | Вызван конструткор соглашения на кредитную карту |" << endl;
 	}
 private:
 	crcard form;
@@ -161,7 +161,7 @@ public:
 		pasportData.number = "123 98745";
 		pasportData.given = "Rf. city Velikiy Novgorod";
 		cout << " | Создан объект клиента банка" << endl;
-		ShowInformation();
+		//ShowInformation();
 	}
 	ClientOfTheBank(int cod, int agreement, int zmoney, string fio, string number, string given) {
 		pasportData.Id = cod;
@@ -206,14 +206,14 @@ public:
 		//listOfCurrecies;
 		ClientOfTheBank* OunClient = NULL;
 		//ClientOfTheBank OunClient();
-		cout << " | Создан объект кассир банка" << endl;
+		cout << " | Вызван конструктор объекта кассира банка" << endl;
 	}
 	PayMasterOperator(double ruToUsa, double usaToru/*, Manager Object*/) {
 		listOfCurrecies.DolToRub = usaToru;
 		listOfCurrecies.RubToDol = ruToUsa;
 		//MainManger = Object;
 		ClientOfTheBank* OunClient = NULL;
-		cout << " | Создан объект кассир банка" << endl;
+		cout << " | Вызван конструктор объекта кассира банка" << endl;
 	}
 
 	ClientOfTheBank* inputMessageToPayMasterForReseptiomMoney(ClientOfTheBank *Client, double outMoney) {
@@ -333,7 +333,7 @@ public:
 		Card1 = new AgreementOfCreditCard();
 		Card2 = new AgreementOfDebetCard();
 		PayMasterOperator Cash1();
-		cout << " | Создан объект менеджера банка" << endl;
+		cout << " | Вызван конструктор объекта менеджера банка. |" << endl;
 	}
 	Manager(int credit, int debit, int pay, PayMasterOperator *ObjectCash) {
 		amountOfCreditCard = credit;
@@ -343,7 +343,7 @@ public:
 		Card2 = new AgreementOfDebetCard();
 		Client1 = new ClientOfTheBank();
 		Cash1 = ObjectCash;
-		cout << " | Создан объект менеджера банка |" << endl;
+		cout << " | Вызван конструктор объекта менеджера банка. |" << endl;
 	}
 private:
 	class ClientOfTheBank *Client1 = NULL;
@@ -371,6 +371,7 @@ pd Manager::giveDataOfClint() {
 // Заключение договоров на офорление пластиковых карт.
 void Manager::makeAgrement() {
 	cout << " |=============================================================================" << endl;
+	cout << " | Выполняется заключение договора на оформление палстиковой карты. " << endl;
 	int watCardNeed = 0;
 	double moneyToCard = 0;
 	pd dataOfClient;
@@ -390,11 +391,11 @@ void Manager::makeAgrement() {
 						cin >> moneyToCard;
 						if (moneyToCard > 0 ) {
 							cout << " | За оформление карты снимется 200 рублей. " << endl;
-							moneyToCard - 200;
+							moneyToCard = moneyToCard - 200;
 						}
 						amountOfCreditCard--;
 						Card1->AddInf(1, dataOfClient, 200, -500);
-						Card1->ShowInf();
+						//Card1->ShowInf();
 						Client1->ChangeColOfAgreements(1);
 						setMessageToPayMasterForDelivery(Client1, moneyToCard);
 					}
@@ -411,7 +412,7 @@ void Manager::makeAgrement() {
 						cin >> moneyToCard;
 						if (moneyToCard > 0) {
 							cout << " | За оформление карты снимется 200 рублей. " << endl;
-							moneyToCard - 200;
+							moneyToCard = moneyToCard - 200;
 						}
 						Card2->AddInf(1, Client1->GiveInformation(), 320);
 						Card2->ShowInf();
@@ -443,20 +444,24 @@ bool Manager::setMessageToPayMasterForReseptiomMoney(ClientOfTheBank* Client, do
 class ManagerOfDepost : Manager {
 public:
 	ManagerOfDepost() :Manager(){
+		//cout << " -|- Вызван конструктор объекта Менеджера по депозитам -|-" << endl;
 		Client3 = new ClientOfTheBank();
 		blanc.data = Client3->GiveInformation();
 		blanc.days = 240;
 		blanc.percent = 5;
 		blanc.valute = "rubl";
 		blanc.value = 50000;
+		cout << " _|_ Вызван конструктор объекта Менеджера по депозитам _|_" << endl;
 	}
 	ManagerOfDepost(double value, string values, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
+		
 		Client3 = new ClientOfTheBank();
 		blanc.data = Client3->GiveInformation();
 		blanc.days = days;
 		blanc.percent = per;
 		blanc.valute = values;
 		blanc.value = value;
+		cout << " _|_ Вызван конструктор объекта Менеджера по депозитам _|_" << endl;
 	}
 	void OpenDeposit();
 private:
@@ -470,7 +475,7 @@ void ManagerOfDepost::OpenDeposit(){
 	cin >> Yes;
 	if (Yes == 2) {
 		cout << " | Вы ввели следующую информацию: " << endl;
-		blanc.data.FIO = "Fominv Igor Kirlovich";
+		blanc.data.FIO = "Fominov Igor Kirlovich";
 		blanc.data.Id = 241;
 		blanc.data.BalanceOfMoney = 1500;
 		blanc.data.Agreement = 2;
@@ -479,7 +484,7 @@ void ManagerOfDepost::OpenDeposit(){
 		blanc.days = 360;
 		blanc.percent = 10;
 		blanc.valute = "rubl";
-		blanc.value = 10000;
+		blanc.value = -10000;
 		cout << " | Порядковый номер - " << blanc.data.Id << endl;
 		cout << " | Ф. И. О. клиентa - " << blanc.data.FIO << endl;
 		cout << " | Номер паспорта - " << blanc.data.number << endl;
@@ -506,7 +511,7 @@ public:
 		blanc.valute = "rubl";
 		blanc.pledge = false;
 	}
-	ManagerOfCredit(bool zalog, string value, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
+	ManagerOfCredit(bool zalog, string value, double per, int days, int credit, int debit, int pay,/* Manager* Object,*/ PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
 		Client2 = new ClientOfTheBank();
 		blanc.data = Client2->GiveInformation();
 		blanc.days = days;
@@ -545,27 +550,76 @@ private:
 int _tmain(int argc, _TCHAR* argv[])
 {
 	setlocale(LC_ALL, "Russian");
-
-
-	exchangeRaters Rates;
+	int action = -1;
+	exchangeRaters Rates; // Список валют и их обменный курс.
+	// Объект кассир.
 	// Создание оъекта кассира банка.
 	class PayMasterOperator *Casier1 = NULL;
+	Casier1 = new PayMasterOperator(0.25, 1.25);
+	// Меню.
+	do {
+		cout << " | Вы находитесь перед входом в отделение банка, ваши действия." << endl;
+		cout << " | Выберете нажав соответствующую цифру:" << endl;
+		cout << " | 1 - Зайти в банк и выполнить обмен валют." << endl;
+		cout << " | 2 - Зайти в банк и оформить пластиковую карту." << endl;
+		cout << " | 3 - Зайти в банк и оформить депозит." << endl;
+		cout << " | 0 - Пойти домой." << endl;
+		cout << " | =======================================================================" << endl;
+		cin >> action;
+		if (action == 0) {
+			return 0;
+		}
+		switch (action) {
+			case 1: {
+						class Manager *MainManager = NULL;
+						MainManager = new Manager(3, 3, 3, Casier1);
+
+						Casier1->СurrencyeExchange(850, "dollars", Rates, "rubli");
+						cout << " | Вы вышли из отдела банка."<< endl;
+						system("pause");
+						break;
+
+			}
+			case 2: {
+						class Manager *MainManager = NULL;
+						MainManager = new Manager(3, 3, 3, Casier1);
+						MainManager->makeAgrement();
+						cout << " | Вы вышли из отдела банка." << endl;
+						system("pause");
+						break;
+
+			}
+			case 3: {
+						cout << " |=============================================================================" << endl;
+						cout << " | Выполняется оформление депозита!" << endl;
+						cout << " |=============================================================================" << endl;
+						cout << " -|- Вызван конструктор объекта Менеджера по депозитам -|-" << endl;
+						class ManagerOfDepost* OperatorOfDeposit = NULL;
+						OperatorOfDeposit = new ManagerOfDepost(90000, "rubl", 5, 200, 3, 3, 3, Casier1);
+						OperatorOfDeposit->OpenDeposit();
+						cout << " | Вы вышли из отдела банка." << endl;
+						system("pause");
+						break;
+
+			}
+			default: {
+						 cout << " | Вы ввели неподходящее число! "<< endl;
+						 system("pause");
+			}
+		}
+	} while (true);
+	
+
+	
+
 	//class PayMasterOperator *Casier2 = NULL;
 	//class	Search *Step = NULL;
-	Casier1 = new PayMasterOperator(0.25, 1.25);
+
 	//Casier2 = new PayMasterOperator();
 	// Создание объекта Менеджера банка.
-	class Manager *MainManager = NULL;
-	MainManager = new Manager(3, 3, 3, Casier1);
+
+
 	
-	Casier1->СurrencyeExchange(850, "dollars", Rates, "rubli");
-	MainManager->makeAgrement();
-	cout << " |=============================================================================" << endl;
-	cout << " | Выполняется оформление кредита!"<< endl;
-	cout << " |=============================================================================" << endl;
-	class ManagerOfDepost* OperatorOfDeposit = NULL;
-	OperatorOfDeposit = new ManagerOfDepost(90000, "rubl", 5, 200, 3, 3, 3, Casier1);
-	OperatorOfDeposit->OpenDeposit();
 	//ManagerOfDepost(double value, string values, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
 
 	system("pause");
