@@ -214,6 +214,7 @@ void ClientOfTheBank::EnterInf(pd listOfDate) {
 //Класс кассир
 class PayMasterOperator {
 public:
+	bool ReplCredit(ClientOfTheBank *Client);
 	PayMasterOperator() {
 		listOfCurrecies.DolToRub = 1,26;
 		listOfCurrecies.RubToDol = 0,25;
@@ -359,7 +360,24 @@ bool PayMasterOperator::СurrencyeExchange(double money, string currencySet, exch
 	cout << " | Перевод закончен." << endl;
 	return true;
 }
+//// ПОПОlНЕНИЕ
+bool PayMasterOperator::ReplCredit(ClientOfTheBank *Client) {
 
+	cout << " | Введите сумму денежных средств для пополнения вашего кредитного счёта: ";
+	int tru_false = 0;
+	pd inf;
+	inf = Client->GiveInformation();
+	double money = 0, outMoney=0;
+	cin >> money;
+
+	cout << " | Передать кассиру нужно - " << money << endl;
+	
+	//OunClient->EnterInf(Client->GiveInformation());
+	OunClient = Client;
+	OunClient->ChangeMoney(money);
+	ReseptiomMoney(money);
+	return OunClient;
+}
 
 
 // ===================== Класс главного менеджера. 
@@ -594,11 +612,15 @@ public:
 		blanc.pledge = zalog;
 		blanc.value = Money;
 	}
+	ClientOfTheBank* GiveClient();
 	void OpenCredit();
 private:
 	class ClientOfTheBank *Client2 = NULL;
 	credit blanc;
 };
+ClientOfTheBank* ManagerOfCredit::GiveClient () {
+	return Client2;
+}
 void ManagerOfCredit::OpenCredit() {
 	cout << " |=============================================================================" << endl;
 	cout << " | Выполняется оформление бланка кредита." << endl;
@@ -745,6 +767,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << " | 3 - Зайти в банк и оформить депозит." << endl;
 		cout << " | 4 - Зайти в банк и оформить кредит." << endl;
 		cout << " | 5 - Зайти в банк и оформить страховку." << endl;
+		cout << " | 6 - Пополнение кредита." << endl;
 		cout << " | 0 - Пойти домой." << endl;
 		cout << " | =======================================================================" << endl;
 		cin >> action;
@@ -810,18 +833,30 @@ int _tmain(int argc, _TCHAR* argv[])
 						break;
 
 			}
+			case 6: {
+						cout << " |=============================================================================" << endl;
+						cout << " | Выполняется ОФОРМЛЕНИЕ кредита!" << endl;
+						cout << " |=============================================================================" << endl;
+						cout << " -|- Вызван конструктор объекта Менеджера по кредитам -|-" << endl;
+						class ManagerOfCredit* OperatorOfCredits = NULL;
+						OperatorOfCredits = new ManagerOfCredit(85900, false, "rubl", 5.5, 90, 3, 3, 3, Casier1);
+						OperatorOfCredits->OpenCredit();
+						cout << " |=============================================================================" << endl;
+						cout << " | Выполняется ПОПОЛНЕНИЕ кредита!" << endl;
+						cout << " |=============================================================================" << endl;
+						Casier1->ReplCredit(OperatorOfCredits->GiveClient());
+
+						cout << " | Вы вышли из отдела банка." << endl;
+						system("pause");
+						break;
+					
+			}
 			default: {
 						 cout << " | Вы ввели неподходящее число! "<< endl;
 						 system("pause");
 			}
 		}
 	} while (true);
-	//class PayMasterOperator *Casier2 = NULL;
-	//class	Search *Step = NULL;
-	//Casier2 = new PayMasterOperator();
-	// Создание объекта Менеджера банка.
-	//ManagerOfDepost(double value, string values, double per, int days, int credit, int debit, int pay, PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
-
 	system("pause");
 	return 0;
 }
