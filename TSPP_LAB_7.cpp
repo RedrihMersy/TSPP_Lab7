@@ -337,6 +337,9 @@ protected:
 	bool setMessageToPayMasterForReseptiomMoney(ClientOfTheBank* Client, double money);
 	PayMasterOperator* Cash1;
 public:
+	int setAmountOfCreditCard();
+	int setAmountOfDebitCard();
+	int setAmountOfPayCardd();
 	bool AddDataOfClint();
 	pd giveDataOfClint();
 	void makeAgrement();
@@ -370,6 +373,15 @@ private:
 	int amountOfPayCard;
 	
 };
+int Manager::setAmountOfCreditCard() {
+	return amountOfCreditCard;
+}
+int Manager::setAmountOfDebitCard() {
+	return amountOfDebitCard;
+}
+int Manager::setAmountOfPayCardd() {
+	return amountOfPayCard;
+}
 bool Manager::AddDataOfClint() {
 	//class ClientOfTheBank *Client1 = NULL;
 	cout << " | Заполнение данных клиента" << endl;
@@ -515,6 +527,12 @@ void ManagerOfDepost::OpenDeposit(){
 		cout << " | Валюта депозита - " << blanc.valute << endl;
 		cout << " | КОЛИЧЕСТВО ДЕНЕГ - " << blanc.value << endl;
 	}
+	else {
+		cout << " | Продолжительность контракта депозита - " << blanc.days << endl;
+		cout << " | Процент - " << blanc.percent << endl;
+		cout << " | Валюта депозита - " << blanc.valute << endl;
+		cout << " | КОЛИЧЕСТВО ДЕНЕГ - " << blanc.value << endl;
+	}
 	Client3->EnterInf(blanc.data);
 	cout << " | Данные клиента на начало операции - " << endl;
 	Client3->ShowInformation();
@@ -535,13 +553,14 @@ public:
 		blanc.valute = "rubl";
 		blanc.pledge = false;
 	}
-	ManagerOfCredit(bool zalog, string value, double per, int days,/* int credit, int debit, int pay*/,/* Manager* Object,*/ PayMasterOperator *ObjectCash) :Manager(/*credit, debit, pay, */ObjectCash) {
+	ManagerOfCredit(int Money,bool zalog, string value, double per, int days, int credit, int debit, int pay,/* Manager* Object,*/ PayMasterOperator *ObjectCash) :Manager(credit, debit, pay, ObjectCash) {
 		Client2 = new ClientOfTheBank();
 		blanc.data = Client2->GiveInformation();
 		blanc.days = days;
 		blanc.percent = per;
 		blanc.valute = value;
 		blanc.pledge = zalog;
+		blanc.value = Money;
 	}
 	void OpenCredit();
 private:
@@ -565,7 +584,7 @@ void ManagerOfCredit::OpenCredit() {
 		blanc.valute = "rubli";
 		blanc.days = 360;
 		blanc.percent = 5;
-		blanc.value = 1000000;
+		blanc.value = 100000;
 		blanc.pledge = true;
 		cout << " | Порядковый номер - " << blanc.data.Id << endl;
 		cout << " | Ф. И. О. клиентa - " << blanc.data.FIO << endl;
@@ -578,9 +597,17 @@ void ManagerOfCredit::OpenCredit() {
 		cout << " | Валюта выделяемых стредств - " << blanc.valute << endl;
 		cout << " | Количество кредитных средств - " << blanc.value << endl;
 		if (blanc.pledge) {
-			cout << " | Предоставлен залог - " << endl;
+			cout << " | Предоставлен залог." << endl;
 		}
-		
+	}
+	else {
+		cout << " | Продолжительность контракта по кредиту - " << blanc.days << endl;
+		cout << " | Процент годовых - " << blanc.percent << endl;
+		cout << " | Валюта выделяемых стредств - " << blanc.valute << endl;
+		cout << " | Количество кредитных средств - " << blanc.value << endl;
+		if (blanc.pledge) {
+			cout << " | Предоставлен залог." << endl;
+		}
 	}
 	Client2->EnterInf(blanc.data);
 	cout << " | Данные клиента на начало операции - " << endl;
@@ -718,7 +745,13 @@ int _tmain(int argc, _TCHAR* argv[])
 
 			}
 			case 4: {
-
+						cout << " |=============================================================================" << endl;
+						cout << " | Выполняется оформление кредита!" << endl;
+						cout << " |=============================================================================" << endl;
+						cout << " -|- Вызван конструктор объекта Менеджера по кредитам -|-" << endl;
+						class ManagerOfCredit* OperatorOfCredits = NULL;
+						OperatorOfCredits = new ManagerOfCredit(85900,false,"rubl",5.5,90, 3, 3, 3, Casier1);
+						OperatorOfCredits->OpenCredit();
 						cout << " | Вы вышли из отдела банка." << endl;
 						system("pause");
 						break;
