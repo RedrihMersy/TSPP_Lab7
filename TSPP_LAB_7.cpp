@@ -143,6 +143,7 @@ void AgreementOfCreditCard::AddInf(int id, pd Info, int date, int low) {
 
 class ClientOfTheBank {
 public:
+	void ChangeMoney(double money);
 	void ShowInformation();
 	void EnterInf(pd listOfDate);
 	void ChangeColOfAgreements(int col) {
@@ -180,7 +181,14 @@ private:
 pd ClientOfTheBank::GiveInformation() {
 	return pasportData;
 }
-
+void ClientOfTheBank::ChangeMoney(double money) {
+	if (money > 0) {
+		pasportData.BalanceOfMoney = pasportData.BalanceOfMoney + money;
+	}
+	else {
+		pasportData.BalanceOfMoney = pasportData.BalanceOfMoney - money;
+	}
+}
 pd ClientOfTheBank::makeAgreement(pd *PasportData, int *Id, double *BalanceOfMoney, int & Agreement) {
 	return pasportData;
 }
@@ -206,6 +214,7 @@ public:
 		//listOfCurrecies;
 		ClientOfTheBank* OunClient = NULL;
 		//ClientOfTheBank OunClient();
+		OunClient = new ClientOfTheBank();
 		cout << " | Вызван конструктор объекта кассира банка" << endl;
 	}
 	PayMasterOperator(double ruToUsa, double usaToru/*, Manager Object*/) {
@@ -213,12 +222,15 @@ public:
 		listOfCurrecies.RubToDol = ruToUsa;
 		//MainManger = Object;
 		ClientOfTheBank* OunClient = NULL;
+		OunClient = new ClientOfTheBank();
 		cout << " | Вызван конструктор объекта кассира банка" << endl;
 	}
 
 	ClientOfTheBank* inputMessageToPayMasterForReseptiomMoney(ClientOfTheBank *Client, double outMoney) {
 		cout << " | Передать кассиру нужно - " << outMoney << endl;
+		//OunClient->EnterInf(Client->GiveInformation());
 		OunClient = Client;
+		OunClient->ChangeMoney(outMoney);
 		ReseptiomMoney(outMoney);
 		return OunClient;
 	}
@@ -227,6 +239,8 @@ public:
 	ClientOfTheBank* inputMessageToPayMasterForDelivery(ClientOfTheBank *Client, double inMoney) {
 		cout << " | Передать клиенту нужно - " << inMoney << endl;
 		OunClient = Client;
+		//OunClient->EnterInf(Client->GiveInformation());
+		OunClient->ChangeMoney(inMoney);
 		Delivery(inMoney);
 		return OunClient;
 	};
@@ -245,10 +259,11 @@ bool PayMasterOperator::ReseptiomMoney(double money)  {
 	cout << " |=============================================================================" << endl;
 	cout << " | Присходит процесс передачи денег от клиента к кассиру." << endl;
 	cout << " | Клиент передаёт денег - " << money << endl;
-	pd NewClient;
-	NewClient = OunClient->GiveInformation();
-	NewClient.BalanceOfMoney = NewClient.BalanceOfMoney - money;
-	OunClient->EnterInf(NewClient);
+	cout << " | Кассир принимает деньги - " << money << endl;
+//	pd NewClient;
+//	NewClient = OunClient->GiveInformation();
+//	NewClient.BalanceOfMoney = NewClient.BalanceOfMoney - money;
+//	OunClient->EnterInf(NewClient);
 	cout << " | Процесс закончен." << endl;
 	OunClient->ShowInformation();
 	return true;
@@ -258,10 +273,11 @@ bool PayMasterOperator::Delivery(double money) {
 	cout << " |=============================================================================" << endl;
 	cout << " | Присходит процесс передачи денег от кассира к клиенту." << endl;
 	cout << " | Кассир передаёт деньги - " << money << endl;
-	pd NewClient;
-	NewClient = OunClient->GiveInformation();
-	NewClient.BalanceOfMoney = NewClient.BalanceOfMoney + money;
-	OunClient->EnterInf(NewClient);
+	cout << " | Клиент принимает деньги - " << money << endl;
+//	pd NewClient;
+//	NewClient = OunClient->GiveInformation();
+//	NewClient.BalanceOfMoney = NewClient.BalanceOfMoney + money;
+//	OunClient->EnterInf(NewClient);
 	cout << " | Процесс закончен." << endl;
 	OunClient->ShowInformation();
 	return true;
@@ -433,13 +449,14 @@ void Manager::makeAgrement() {
 }
 
 bool Manager::setMessageToPayMasterForDelivery(ClientOfTheBank* Client, double money) {
-	Cash1->inputMessageToPayMasterForDelivery(Client1, money);
+	Cash1->inputMessageToPayMasterForDelivery(Client, money);
 	return true;
 }
 bool Manager::setMessageToPayMasterForReseptiomMoney(ClientOfTheBank* Client, double money) {
-	Cash1->inputMessageToPayMasterForReseptiomMoney(Client1, money);
+	Cash1->inputMessageToPayMasterForReseptiomMoney(Client, money);
 	return true;
 }
+
 // Класс Менеджера по депозитам.
 class ManagerOfDepost : Manager {
 public:
@@ -468,8 +485,10 @@ private:
 	class ClientOfTheBank *Client3 = NULL;
 	deposit blanc;
 };
+
 void ManagerOfDepost::OpenDeposit(){ 
 	cout << " |=============================================================================" << endl;
+	cout << " | Выполняется оформление бланка договора." << endl;
 	int Yes = 0;
 	cout << " | Оставить информацию по умолчанию. 2 - Ввести новую информацию."<< endl;
 	cin >> Yes;
@@ -484,7 +503,7 @@ void ManagerOfDepost::OpenDeposit(){
 		blanc.days = 360;
 		blanc.percent = 10;
 		blanc.valute = "rubl";
-		blanc.value = -10000;
+		blanc.value = 10000;
 		cout << " | Порядковый номер - " << blanc.data.Id << endl;
 		cout << " | Ф. И. О. клиентa - " << blanc.data.FIO << endl;
 		cout << " | Номер паспорта - " << blanc.data.number << endl;
@@ -497,9 +516,15 @@ void ManagerOfDepost::OpenDeposit(){
 		cout << " | Валюта депозита - " << blanc.valute << endl;
 		cout << " | КОЛИЧЕСТВО ДЕНЕГ - " << blanc.value << endl;
 	}
+	Client3->EnterInf(blanc.data);
+	cout << " | Данные клиента на начало операции - " << endl;
+	Client3->ShowInformation();
 	Client3->ChangeColOfAgreements(1);
+//	Client3->ShowInformation();
+	system("pause");
 	setMessageToPayMasterForReseptiomMoney(Client3, blanc.value);
 }
+
 // Класс Менеджера по кредитам.
 class ManagerOfCredit : Manager {
 public:
