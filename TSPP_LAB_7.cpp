@@ -16,6 +16,8 @@ struct pd {
 	double BalanceOfMoney;
 	int Id;
 	int Agreement;
+	string contract = "No contract";
+	double moneyOfContract = 0;
 };
 // Сутруктура кредитной карты.
 struct crcard {
@@ -143,6 +145,15 @@ void AgreementOfCreditCard::AddInf(int id, pd Info, int date, int low) {
 
 class ClientOfTheBank {
 public:
+	void AddNameOfContract(string Name) {
+		pasportData.contract = Name;
+	}
+	void AddMoneyOfContract(double money) {
+		pasportData.moneyOfContract = money;
+	}
+	void PLUSMoneyOfContract(double money) {
+		pasportData.moneyOfContract = pasportData.moneyOfContract + money;
+	}
 	void ChangeMoney(double money);
 	void ShowInformation();
 	void EnterInf(pd listOfDate);
@@ -168,6 +179,7 @@ public:
 		pasportData.number = "123 98745";
 		pasportData.given = "Rf. city Velikiy Novgorod";
 		cout << " | Создан объект клиента банка" << endl;
+		
 		//ShowInformation();
 	}
 	ClientOfTheBank(int cod, int agreement, int zmoney, string fio, string number, string given) {
@@ -206,6 +218,12 @@ void ClientOfTheBank::ShowInformation() {
 	cout << " | Место выдачи паспорта - " << pasportData.given << endl;
 	cout << " | Баланс счёта - " << pasportData.BalanceOfMoney << endl;
 	cout << " | Количество заключенных договоров - " << pasportData.Agreement << endl;
+	if (pasportData.contract !=  "No contract") {
+		cout << " | Договор - " << pasportData.contract << endl;
+	}
+	if (pasportData.moneyOfContract) {
+		cout << " | Счёт договора - " << pasportData.moneyOfContract << endl;
+	}
 }
 void ClientOfTheBank::EnterInf(pd listOfDate) {
 	pasportData = listOfDate;
@@ -496,7 +514,9 @@ void Manager::makeAgrement() {
 						Card2->ShowInf();
 						amountOfDebitCard--;
 						Client1->ChangeColOfAgreements(1);
-						setMessageToPayMasterForReseptiomMoney(Client1, moneyToCard);
+						Client1->AddNameOfContract("Депозитная карта");
+						Client1->AddMoneyOfContract(moneyToCard);
+						setMessageToPayMasterForReseptiomMoney(Client1, moneyToCard-200);
 					}
 					else {
 						cout << " | Карт больше нет." << endl;
@@ -589,6 +609,8 @@ void ManagerOfDepost::OpenDeposit(){
 	Client3->ChangeColOfAgreements(1);
 //	Client3->ShowInformation();
 	system("pause");
+	Client3->AddNameOfContract("Deposit");
+	Client3->AddMoneyOfContract(blanc.value);
 	setMessageToPayMasterForReseptiomMoney(Client3, blanc.value);
 }
 
@@ -669,6 +691,8 @@ void ManagerOfCredit::OpenCredit() {
 	Client2->ChangeColOfAgreements(1);
 	//	Client3->ShowInformation();
 	system("pause");
+	Client2->AddNameOfContract("Credit");
+	//Client2->AddMoneyOfContract(blanc.value);
 	setMessageToPayMasterForDelivery(Client2, blanc.value);
 }
 // Класс страховщика.
