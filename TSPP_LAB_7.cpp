@@ -508,8 +508,7 @@ void Manager::makeAgrement() {
 						cin >> moneyToCard;
 						if (moneyToCard > 0) {
 							cout << " | За оформление карты снимется 200 рублей. " << endl;
-							moneyToCard = moneyToCard - 200 +200;
-							moneyToCard = moneyToCard + 400 -522;
+							moneyToCard = moneyToCard;
 
 						}
 						Card2->AddInf(1, Client1->GiveInformation(), 320);
@@ -518,7 +517,7 @@ void Manager::makeAgrement() {
 						Client1->ChangeColOfAgreements(1);
 						Client1->AddNameOfContract("Депозитная карта");
 						Client1->AddMoneyOfContract(moneyToCard);
-						setMessageToPayMasterForReseptiomMoney(Client1, moneyToCard-200);
+						setMessageToPayMasterForReseptiomMoney(Client1, moneyToCard+200);
 					}
 					else {
 						cout << " | Карт больше нет." << endl;
