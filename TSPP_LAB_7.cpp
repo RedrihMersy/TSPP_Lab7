@@ -487,7 +487,7 @@ void Manager::makeAgrement() {
 						cin >> moneyToCard;
 						if (moneyToCard > 0 ) {
 							cout << " | За оформление карты снимется 200 рублей. " << endl;
-							moneyToCard = moneyToCard - 200;
+							moneyToCard = moneyToCard + 200;
 						}
 						amountOfCreditCard--;
 						Card1->AddInf(1, dataOfClient, 200, -500);
@@ -865,7 +865,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			}
 			case 6: {
 						cout << " |=============================================================================" << endl;
-						cout << " | Выполняется ОФОРМЛЕНИЕ кредит!" << endl;
+						cout << " | Выполняется ОФОРМЛЕНИЕ кредита!" << endl;
 						cout << " |=============================================================================" << endl;
 						cout << " -|- Вызван конструктор объекта Менеджера по кредитам -|-" << endl;
 						class ManagerOfCredit* OperatorOfCredits = NULL;
@@ -888,7 +888,7 @@ int _tmain(int argc, _TCHAR* argv[])
 						cin >> fun;
 						switch (fun) {
 						case 1: {
-									cout << " " << endl;
+									cout << " ... " << endl;
 									cout << " Мурчание завораживает, но нужно идти по делам. " << endl;
 									break;
 						}
