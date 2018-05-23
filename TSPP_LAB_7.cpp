@@ -487,7 +487,7 @@ void Manager::makeAgrement() {
 						cin >> moneyToCard;
 						if (moneyToCard > 0 ) {
 							cout << " | За оформление карты снимется 200 рублей. " << endl;
-							moneyToCard = moneyToCard - 200;
+							moneyToCard = moneyToCard + 200;
 						}
 						amountOfCreditCard--;
 						Card1->AddInf(1, dataOfClient, 200, -500);
